@@ -1,0 +1,9 @@
+ota-property-files=metadata:69:326,metadata.pb:463:214                 
+ota-required-cache=0
+ota-type=BLOCK
+post-build=google/raven/raven:12/SQ1D.211205.016.A1/7957957:user/release-keys
+post-build-incremental=1639846195
+post-sdk-level=31
+post-security-patch-level=2021-12-05
+post-timestamp=1639845899
+pre-device=sweet,sweetin
