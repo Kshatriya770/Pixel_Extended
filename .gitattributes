@@ -1,0 +1,2 @@
+boot.img filter=lfs diff=lfs merge=lfs -text
+boot.img.psd filter=lfs diff=lfs merge=lfs -text
