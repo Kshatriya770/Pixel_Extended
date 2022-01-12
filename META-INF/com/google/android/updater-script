@@ -1,0 +1,67 @@
+assert(getprop("ro.product.device") == "sweet" || getprop("ro.build.product") == "sweet" || 
+       getprop("ro.product.device") == "sweetin" || getprop("ro.build.product") == "sweetin" || abort("E3004: This package is for device: sweet,sweetin; this device is " + getprop("ro.product.device") + "."););
+ui_print("Target: google/raven/raven:12/SQ1D.211205.016.A1/7957957:user/release-keys");
+ifelse(is_mounted("/system"), unmount("/system"));
+ui_print("----------------------------------------------");
+ui_print("              PixelExtended");
+ui_print("              by Saurabh Singh");
+ui_print("----------------------------------------------");
+ui_print(" Android version: 12");
+ui_print(" PixelExtended version: 4.0");
+ui_print(" Build id: SQ1D.211205.016.A1");
+ui_print(" Build date: 20211218-1649");
+ui_print(" Security patch: 2021-12-05");
+ui_print(" Device: sweet");
+ui_print("----------------------------------------------");
+
+# --- Start patching dynamic partitions ---
+
+
+# Update dynamic partition metadata
+
+assert(update_dynamic_partitions(package_extract_file("dynamic_partitions_op_list")));
+
+# Patch partition system
+
+ui_print("Patching system image unconditionally...");
+show_progress(0.500000, 0);
+block_image_update(map_partition("system"), package_extract_file("system.transfer.list"), "system.new.dat.br", "system.patch.dat") ||
+  abort("E1001: Failed to update system image.");
+
+# Patch partition vendor
+
+ui_print("Patching vendor image unconditionally...");
+show_progress(0.100000, 0);
+block_image_update(map_partition("vendor"), package_extract_file("vendor.transfer.list"), "vendor.new.dat.br", "vendor.patch.dat") ||
+  abort("E2001: Failed to update vendor image.");
+
+# Patch partition product
+
+ui_print("Patching product image unconditionally...");
+show_progress(0.100000, 0);
+block_image_update(map_partition("product"), package_extract_file("product.transfer.list"), "product.new.dat.br", "product.patch.dat") ||
+  abort("E2001: Failed to update product image.");
+
+# Patch partition odm
+
+ui_print("Patching odm image unconditionally...");
+show_progress(0.100000, 0);
+block_image_update(map_partition("odm"), package_extract_file("odm.transfer.list"), "odm.new.dat.br", "odm.patch.dat") ||
+  abort("E2001: Failed to update odm image.");
+
+# Patch partition system_ext
+
+ui_print("Patching system_ext image unconditionally...");
+show_progress(0.100000, 0);
+block_image_update(map_partition("system_ext"), package_extract_file("system_ext.transfer.list"), "system_ext.new.dat.br", "system_ext.patch.dat") ||
+  abort("E2001: Failed to update system_ext image.");
+
+# --- End patching dynamic partitions ---
+
+package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
+show_progress(0.100000, 10);
+ui_print("Patching dtbo");
+package_extract_file("dtbo.img", "/dev/block/bootdevice/by-name/dtbo");
+ui_print("Patching vbmeta");
+package_extract_file("vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta");
+set_progress(1.000000);
